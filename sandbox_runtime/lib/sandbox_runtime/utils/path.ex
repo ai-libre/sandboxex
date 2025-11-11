@@ -57,4 +57,12 @@ defmodule SandboxRuntime.Utils.Path do
 
     String.starts_with?(normalized_path, normalized_parent)
   end
+
+  @doc """
+  Joins path components, delegating to Path.join/2.
+  """
+  @spec join(String.t(), String.t()) :: String.t()
+  def join(left, right) do
+    Path.join(left, right)
+  end
 end

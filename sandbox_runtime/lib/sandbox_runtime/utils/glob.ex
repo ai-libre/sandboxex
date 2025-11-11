@@ -55,15 +55,36 @@ defmodule SandboxRuntime.Utils.Glob do
   # Private Helpers
 
   defp escape_special_chars(pattern) do
-    # Escape regex special chars except glob special chars
-    String.replace(pattern, ~r/([.+^$()|\[\]{}])/, "\\\\\\1")
+    # First, escape all regex special characters
+    escaped = Regex.escape(pattern)
+
+    # Then unescape glob special characters that we want to process
+    escaped
+    |> String.replace("\\*", "*")
+    |> String.replace("\\?", "?")
+    |> String.replace("\\[", "[")
+    |> String.replace("\\]", "]")
+    |> String.replace("\\{", "{")
+    |> String.replace("\\}", "}")
   end
 
   defp convert_glob_to_regex(pattern) do
     pattern
+    # Handle **/ pattern (matches zero or more directories)
+    |> String.replace("**/", "<!DOUBLESTAR_SLASH!>")
+    # Handle /** pattern (matches zero or more directories at end)
+    |> String.replace("/**", "<!SLASH_DOUBLESTAR!>")
+    # Handle remaining ** (matches any characters including /)
     |> String.replace("**", "<!DOUBLESTAR!>")
+    # Replace single * (matches any characters except /)
     |> String.replace("*", "[^\\/]*")
+    # Replace **/ with optional directory matcher
+    |> String.replace("<!DOUBLESTAR_SLASH!>", "(?:.*?/)?")
+    # Replace /** with directory matcher
+    |> String.replace("<!SLASH_DOUBLESTAR!>", "(?:/.*)?")
+    # Replace remaining ** with any character matcher
     |> String.replace("<!DOUBLESTAR!>", ".*")
+    # Replace ? with single character matcher
     |> String.replace("?", ".")
   end
 
