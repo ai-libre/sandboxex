@@ -1,0 +1,22 @@
+# Elixir build artifacts
+/_build/
+/deps/
+*.beam
+*.ez
+
+# Generated files
+erl_crash.dump
+
+# Mix
+/mix.lock.~*~
+
+# IDE and editor files
+/.vscode/
+/.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
