@@ -6,7 +6,8 @@ config :kairos,
     Kairos.Accounts,
     Kairos.Merits,
     Kairos.Interactions,
-    Kairos.Moderation
+    Kairos.Moderation,
+    Kairos.Wearables
   ]
 
 # Configure Ecto Repo
